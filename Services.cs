@@ -117,6 +117,29 @@ public sealed class ProgressService
         .Where(question => !Store.Questions[question.Id].Completed)
         .ToList();
 
+    public Question? PickNextQuestion(Random random)
+    {
+        ArgumentNullException.ThrowIfNull(random);
+
+        var unansweredQuestions = _questions
+            .Where(question =>
+            {
+                var progress = Store.Questions[question.Id];
+                return !progress.Completed && progress.Attempts == 0;
+            })
+            .ToList();
+
+        if (unansweredQuestions.Count > 0)
+        {
+            return unansweredQuestions[random.Next(unansweredQuestions.Count)];
+        }
+
+        var remainingQuestions = RemainingQuestions;
+        return remainingQuestions.Count == 0
+            ? null
+            : remainingQuestions[random.Next(remainingQuestions.Count)];
+    }
+
     public void RecordAnswer(Question question, string answer, bool isCorrect)
     {
         var progress = Store.Questions[question.Id];
@@ -194,8 +217,7 @@ public sealed class ProgressService
 
     private bool IsCompleted(QuestionProgress progress)
     {
-        return progress.ConsecutiveCorrect >= _requiredConsecutiveCorrect
-            && progress.CorrectCount > progress.WrongCount;
+        return progress.CorrectCount > progress.WrongCount;
     }
 }
 
@@ -223,7 +245,7 @@ public sealed class ExcelReportService
         var rows = new (string Name, object Value)[]
         {
             ("题目总数", questions.Count),
-            ($"已归档（连续答对 {requiredConsecutiveCorrect} 次且答对次数大于答错次数）", statistics.Completed),
+            ("已归档（答对次数大于答错次数）", statistics.Completed),
             ("待练习", statistics.Remaining),
             ("总作答次数", statistics.Attempts),
             ("答对次数", statistics.Correct),

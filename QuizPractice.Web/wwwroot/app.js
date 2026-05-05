@@ -120,12 +120,12 @@ function renderQuestion(data) {
   elements.questionText.textContent = data.question.text;
   elements.submitSelectionButton.disabled = true;
   renderOptions(elements.options, data.question, state.selected, null, true);
-  renderProgress(data.progress, data.requiredConsecutiveCorrect, data.archiveRule);
+  renderProgress(data.progress, data.archiveRule);
 }
 
-function renderProgress(progress, requiredConsecutiveCorrect, archiveRule) {
+function renderProgress(progress, archiveRule) {
   const status = progress.completed ? "已归档" : "继续巩固";
-  elements.progressLine.textContent = `作答 ${progress.attempts} · 对 ${progress.correctCount} · 错 ${progress.wrongCount} · 连对 ${progress.consecutiveCorrect}/${requiredConsecutiveCorrect} · ${status}`;
+  elements.progressLine.textContent = `作答 ${progress.attempts} · 对 ${progress.correctCount} · 错 ${progress.wrongCount} · ${status}`;
   elements.progressLine.title = archiveRule;
 }
 
@@ -145,7 +145,7 @@ function renderFeedback(data) {
   elements.feedbackQuestion.textContent = `${question.type} 第 ${question.number} 题`;
   elements.feedbackQuestionText.textContent = question.text;
   elements.feedbackLine.textContent = `你的答案：${formatAnswer(question, feedback.answer)} · ${data.texts.correctAnswer}：${formatAnswer(question, question.correctAnswer)}`;
-  elements.feedbackProgress.textContent = `本题状态：${feedback.completed ? "已归档" : "继续巩固"} · 连对 ${feedback.consecutiveCorrect}/${data.requiredConsecutiveCorrect} · 对/错 ${feedback.correctCount}/${feedback.wrongCount}`;
+  elements.feedbackProgress.textContent = `本题状态：${feedback.completed ? "已归档" : "继续巩固"} · 对/错 ${feedback.correctCount}/${feedback.wrongCount}`;
   renderOptions(elements.feedbackOptions, question, parseAnswerSet(feedback.answer), parseAnswerSet(question.correctAnswer), false);
 }
 

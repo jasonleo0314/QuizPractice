@@ -124,14 +124,11 @@ public sealed class QuizWebSession
             return;
         }
 
-        var remaining = _progressService.RemainingQuestions;
-        if (remaining.Count == 0)
+        _currentQuestion = _progressService.PickNextQuestion(_random);
+        if (_currentQuestion is null)
         {
             SaveAll();
-            return;
         }
-
-        _currentQuestion = remaining[_random.Next(remaining.Count)];
     }
 
     private QuizStateResponse CreateState(string? message = null)
@@ -143,7 +140,7 @@ public sealed class QuizWebSession
             _options.Texts,
             _options.Texts.Prompt,
             string.Join('/', _options.ExitKeys),
-            BuildArchiveRuleText(_options.RequiredConsecutiveCorrect),
+            BuildArchiveRuleText(),
             _options.RequiredConsecutiveCorrect,
             _questions.Count,
             Path.GetFileName(_options.ProgressPath),
@@ -172,9 +169,9 @@ public sealed class QuizWebSession
         return Path.IsPathRooted(path) ? path : Path.Combine(AppContext.BaseDirectory, path);
     }
 
-    private static string BuildArchiveRuleText(int requiredConsecutiveCorrect)
+    private static string BuildArchiveRuleText()
     {
-        return $"连续答对 {requiredConsecutiveCorrect} 次且答对次数大于答错次数";
+        return "答对次数大于答错次数";
     }
 }
 

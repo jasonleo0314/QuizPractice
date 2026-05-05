@@ -45,7 +45,14 @@ try
             break;
         }
 
-        var question = remaining[random.Next(remaining.Count)];
+        var question = progressService.PickNextQuestion(random);
+        if (question is null)
+        {
+            SaveAll(progressService, reportService, questions, options);
+            QuizConsoleRenderer.RenderCompletionMessage(options, progressService.GetStatistics());
+            break;
+        }
+
         QuizConsoleRenderer.RenderScreen(question, progressService, options);
 
         var answer = QuizConsoleRenderer.ReadAnswer(question, options);

@@ -20,7 +20,7 @@ public static class QuizConsoleRenderer
         summaryGrid.AddColumn();
         summaryGrid.AddRow(
             $"[grey]已加载题目[/]\n[bold white]{questions.Count}[/]",
-            $"[grey]归档条件[/]\n[white]{Markup.Escape(BuildArchiveRuleText(options.RequiredConsecutiveCorrect))}[/]");
+            $"[grey]归档条件[/]\n[white]{Markup.Escape(BuildArchiveRuleText())}[/]");
         summaryGrid.AddRow(
             "[grey]统计频率[/]\n[white]每题展示实时统计[/]",
             $"[grey]快捷操作[/]\n[yellow]{Markup.Escape(string.Join('/', options.ExitKeys))}[/] [grey]随时退出[/]");
@@ -73,7 +73,7 @@ public static class QuizConsoleRenderer
             $"{status}  [grey]· {Markup.Escape(feedback.Question.Type)} 第 {Markup.Escape(feedback.Question.Number)} 题[/]\n" +
             $"[grey]你的答案：[/] [white]{Markup.Escape(FormatAnswerDisplay(feedback.Question, feedback.Answer))}[/]    " +
             $"[grey]{Markup.Escape(options.Texts.CorrectAnswer)}：[/] [bold yellow]{Markup.Escape(FormatAnswerDisplay(feedback.Question, feedback.Question.CorrectAnswer))}[/]\n" +
-            $"[grey]本题状态：[/] {archiveStatus}  [grey]· 连对[/] [yellow]{feedback.ConsecutiveCorrect}/{options.RequiredConsecutiveCorrect}[/]  [grey]· 对/错[/] [green]{feedback.CorrectCount}[/]/[red]{feedback.WrongCount}[/]\n\n" +
+            $"[grey]本题状态：[/] {archiveStatus}  [grey]· 对/错[/] [green]{feedback.CorrectCount}[/]/[red]{feedback.WrongCount}[/]\n\n" +
             BuildQuestionContent(feedback.Question, feedback.Question.CorrectAnswer, feedback.Answer),
             "[bold deepskyblue1]作答反馈[/]",
             new Style(feedback.IsCorrect ? Color.Green : Color.Red),
@@ -123,7 +123,7 @@ public static class QuizConsoleRenderer
         var mastery = progress.Completed ? "[green]已归档[/]" : "[yellow]继续巩固[/]";
         AnsiConsole.Write(CreatePanel(
             $"[grey]本题进度[/]  作答 [white]{progress.Attempts}[/]  ·  正确 [green]{progress.CorrectCount}[/]  ·  错误 [red]{progress.WrongCount}[/]\n" +
-            $"[grey]归档状态[/]  {mastery}  [grey]· 连对[/] [yellow]{progress.ConsecutiveCorrect}/{options.RequiredConsecutiveCorrect}[/]  [grey]· 条件[/] [white]{Markup.Escape(BuildArchiveRuleText(options.RequiredConsecutiveCorrect))}[/]",
+            $"[grey]归档状态[/]  {mastery}  [grey]· 条件[/] [white]{Markup.Escape(BuildArchiveRuleText())}[/]",
             null,
             progress.Completed ? new Style(Color.Green) : MutedBorderStyle,
             new Padding(1, 0, 1, 0)));
@@ -271,9 +271,9 @@ public static class QuizConsoleRenderer
         return panel;
     }
 
-    private static string BuildArchiveRuleText(int requiredConsecutiveCorrect)
+    private static string BuildArchiveRuleText()
     {
-        return $"连续答对 {requiredConsecutiveCorrect} 次且答对次数大于答错次数";
+        return "答对次数大于答错次数";
     }
 
     private static string FormatPercent(double value)
