@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="format-detection" content="telephone=no">
+  <title>题库练习</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <main class="app-shell">
+    <section class="hero card">
+      <div>
+        <p class="eyebrow" id="subtitle">随机抽题 · 自动保存</p>
+        <h1 id="title">题库练习</h1>
+      </div>
+    </section>
+
+    <section class="stats-grid" aria-label="统计">
+      <article class="stat-card stat-primary"><span>总题数</span><strong id="stat-total">0</strong></article>
+      <article class="stat-card stat-primary"><span>已归档</span><strong id="stat-completed">0</strong></article>
+      <article class="stat-card stat-primary"><span>待练习</span><strong id="stat-remaining">0</strong></article>
+      <article class="stat-card stat-primary"><span>正确率</span><strong id="stat-accuracy-rate">0.00%</strong></article>
+      <article class="stat-card"><span>作答</span><strong id="stat-attempts">0</strong></article>
+      <article class="stat-card"><span>正确</span><strong id="stat-correct">0</strong></article>
+      <article class="stat-card"><span>错误</span><strong id="stat-wrong">0</strong></article>
+      <article class="stat-card"><span>归档率</span><strong id="stat-completion-rate">0.00%</strong></article>
+    </section>
+
+    <section id="message" class="message" hidden></section>
+
+    <section id="completion-card" class="card completion" hidden>
+      <h2 id="completion-title">已完成全部题目。</h2>
+      <p id="completion-detail"></p>
+      <a class="ghost-button" href="/api/report">下载 Excel 作答情况</a>
+    </section>
+
+    <section id="question-card" class="card question-card" hidden>
+      <div class="section-title">
+        <span id="question-kind">题目</span>
+        <small id="question-id"></small>
+      </div>
+      <p id="question-text" class="question-text"></p>
+      <div id="options" class="options"></div>
+      <button id="submit-selection-button" class="submit-selection" type="button" hidden>提交所选答案</button>
+    </section>
+
+    <section id="progress-card" class="card progress-card" hidden>
+      <strong id="question-progress-line"></strong>
+    </section>
+
+    <section id="feedback-card" class="card feedback-card" hidden>
+      <div class="feedback-heading">
+        <h2 id="feedback-status"></h2>
+        <span id="feedback-question"></span>
+      </div>
+      <p id="feedback-question-text" class="question-text"></p>
+      <p id="feedback-line"></p>
+      <p id="feedback-progress"></p>
+      <div id="feedback-options" class="options"></div>
+      <div class="feedback-actions">
+        <button id="next-button" type="button">继续下一题</button>
+        <a class="ghost-button" href="/api/report">下载 Excel</a>
+      </div>
+    </section>
+
+    <button id="exit-button" class="exit-button" type="button">保存退出</button>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>

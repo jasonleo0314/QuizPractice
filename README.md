@@ -102,11 +102,21 @@ QuizPractice 是一个基于 .NET 8 的题库练习程序，面向“持续刷�
 
 ## 快速开始
 
+控制台程序：
+
 ```bash
 dotnet restore
 dotnet build
-dotnet run
+dotnet run --project QuizPractice.csproj
 ```
+
+网页程序：
+
+```bash
+dotnet run --project QuizPractice.Web/QuizPractice.Web.csproj
+```
+
+启动后在浏览器访问终端输出的地址；如果需要在手机微信内置浏览器访问，请让手机与运行程序的电脑处于同一网络，并使用电脑局域网 IP 加端口访问。
 
 ## 项目结构（示例）
 
@@ -114,6 +124,7 @@ dotnet run
 - `Models.cs`：题目、进度、统计模型
 - `Services.cs`：题库读取、进度保存、Excel 导出
 - `QuizConsoleRenderer.cs`：控制台界面渲染
+- `QuizPractice.Web/`：网页程序，复用同一套题库、判题、进度保存和 Excel 导出服务
 
 ## 贡献
 

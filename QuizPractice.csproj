@@ -10,6 +10,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="QuizPractice.Web\**" />
+    <Content Remove="QuizPractice.Web\**" />
+    <EmbeddedResource Remove="QuizPractice.Web\**" />
+    <None Remove="QuizPractice.Web\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
