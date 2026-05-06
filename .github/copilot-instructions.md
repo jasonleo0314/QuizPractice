@@ -30,7 +30,7 @@ The normal runtime data flow is: load TSV questions -> load or create JSON progr
 - Runtime file paths in config (`QuestionBankPath`, `ProgressPath`, `ExcelReportPath`) are resolved relative to `AppContext.BaseDirectory`, not the current working directory. The `.csproj` copies `appsettings.json` and `QuizPractice.tsv` to the output directory.
 - Question IDs are derived as `$"{Type}-{Number}"`. Preserve this when changing progress storage because existing `quiz-progress.json` data depends on it.
 - A question is completed when `CorrectCount > WrongCount`; question selection prioritizes unanswered, uncompleted questions before other uncompleted questions.
-- TSV quiz files use columns in this order: type, number, text, A, B, C, D, correct answer. Empty options are valid and are removed at load time, which supports true/false and fewer-than-four-option questions.
+- TSV quiz files use columns in this order: type, number, text, A, B, C, D, correct answer. Empty options are valid, and trailing empty option columns may be omitted; the loader treats the last column as the correct answer.
 - Multiple-choice answers are compared in normalized sorted-letter form, so `CA`, `A,C`, and `ac` can represent the same answer when valid for the question options.
 - Console output is Chinese-first and uses Spectre.Console markup. Escape dynamic text with `Markup.Escape` before embedding it in markup strings.
 - Progress JSON is written UTF-8 with indented JSON and relaxed escaping so Chinese text remains readable. Excel worksheet names and labels are also Chinese.

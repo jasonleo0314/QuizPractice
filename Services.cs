@@ -31,18 +31,22 @@ public static class QuestionBankLoader
             }
 
             var columns = line.Split('\t');
-            if (columns.Length < 8)
+            if (columns.Length < 6)
             {
                 continue;
             }
 
-            var options = new Dictionary<string, string>
-            {
-                ["A"] = columns[3].Trim(),
-                ["B"] = columns[4].Trim(),
-                ["C"] = columns[5].Trim(),
-                ["D"] = columns[6].Trim()
-            };
+            var optionKeys = new[] { "A", "B", "C", "D" };
+            var optionValues = columns
+                .Skip(3)
+                .Take(Math.Min(optionKeys.Length, columns.Length - 4))
+                .Select(option => option.Trim())
+                .ToList();
+
+            var options = optionKeys
+                .Take(optionValues.Count)
+                .Zip(optionValues, (key, value) => new KeyValuePair<string, string>(key, value))
+                .ToDictionary(option => option.Key, option => option.Value);
 
             foreach (var emptyOption in options.Where(option => string.IsNullOrWhiteSpace(option.Value)).Select(option => option.Key).ToList())
             {
@@ -54,7 +58,7 @@ public static class QuestionBankLoader
                 columns[1].Trim(),
                 columns[2].Trim(),
                 options,
-                AnswerNormalizer.Normalize(columns[7], isMultiple: columns[0].Contains("多选", StringComparison.OrdinalIgnoreCase))));
+                AnswerNormalizer.Normalize(columns[^1], isMultiple: columns[0].Contains("多选", StringComparison.OrdinalIgnoreCase))));
         }
 
         return questions;
