@@ -37,8 +37,15 @@ public sealed record Question(
     string CorrectAnswer)
 {
     public string Id => $"{Type}-{Number}";
-    public bool IsJudge => Type.Contains("判断", StringComparison.OrdinalIgnoreCase);
-    public bool IsMultiple => Type.Contains("多选", StringComparison.OrdinalIgnoreCase);
+    public bool IsJudge => Type.Contains("judgment", StringComparison.OrdinalIgnoreCase);
+    public bool IsMultiple => Type.Contains("multiple_choice", StringComparison.OrdinalIgnoreCase);
+    public string TypeDisplayName => Type switch
+    {
+        "single_choice" => "单选题",
+        "multiple_choice" => "多选题",
+        "judgment" => "判断题",
+        _ => Type
+    };
 }
 
 public sealed class QuestionProgress

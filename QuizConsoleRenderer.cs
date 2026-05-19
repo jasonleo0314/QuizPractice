@@ -70,7 +70,7 @@ public static class QuizConsoleRenderer
         var archiveStatus = feedback.Completed ? "[green]已归档[/]" : "[yellow]继续巩固[/]";
 
         AnsiConsole.Write(CreatePanel(
-            $"{status}  [grey]· {Markup.Escape(feedback.Question.Type)} 第 {Markup.Escape(feedback.Question.Number)} 题[/]\n" +
+            $"{status}  [grey]· {Markup.Escape(feedback.Question.TypeDisplayName)} 第 {Markup.Escape(feedback.Question.Number)} 题[/]\n" +
             $"[grey]你的答案：[/] [white]{Markup.Escape(FormatAnswerDisplay(feedback.Question, feedback.Answer))}[/]    " +
             $"[grey]{Markup.Escape(options.Texts.CorrectAnswer)}：[/] [bold yellow]{Markup.Escape(FormatAnswerDisplay(feedback.Question, feedback.Question.CorrectAnswer))}[/]\n" +
             $"[grey]本题状态：[/] {archiveStatus}  [grey]· 对/错[/] [green]{feedback.CorrectCount}[/]/[red]{feedback.WrongCount}[/]\n\n" +
@@ -116,7 +116,7 @@ public static class QuizConsoleRenderer
         var progress = progressService[question];
         AnsiConsole.Write(CreatePanel(
             BuildQuestionContent(question),
-            $"[bold deepskyblue1]{Markup.Escape(question.Type)} · 第 {Markup.Escape(question.Number)} 题[/]",
+            $"[bold deepskyblue1]{Markup.Escape(question.TypeDisplayName)} · 第 {Markup.Escape(question.Number)} 题[/]",
             PrimaryBorderStyle,
             new Padding(1, 1)));
 

@@ -223,6 +223,7 @@ public sealed record StatisticsDto(
 public sealed record QuestionDto(
     string Id,
     string Type,
+    string TypeDisplayName,
     string Number,
     string Text,
     IReadOnlyDictionary<string, string> Options,
@@ -235,6 +236,7 @@ public sealed record QuestionDto(
         return new QuestionDto(
             question.Id,
             question.Type,
+            question.TypeDisplayName,
             question.Number,
             question.Text,
             question.Options,

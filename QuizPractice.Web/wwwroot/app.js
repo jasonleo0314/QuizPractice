@@ -115,7 +115,7 @@ function renderQuestion(data) {
   }
 
   state.selected = new Set();
-  elements.questionKind.textContent = data.question.type;
+  elements.questionKind.textContent = data.question.typeDisplayName;
   elements.questionId.textContent = `第 ${data.question.number} 题`;
   elements.questionText.textContent = data.question.text;
   elements.submitSelectionButton.disabled = true;
@@ -142,7 +142,7 @@ function renderFeedback(data) {
   elements.feedbackCard.classList.toggle("correct", feedback.isCorrect);
   elements.feedbackCard.classList.toggle("wrong", !feedback.isCorrect);
   elements.feedbackStatus.textContent = feedback.isCorrect ? `✓ ${data.texts.correct}` : `✗ ${data.texts.wrong}`;
-  elements.feedbackQuestion.textContent = `${question.type} 第 ${question.number} 题`;
+  elements.feedbackQuestion.textContent = `${question.typeDisplayName} 第 ${question.number} 题`;
   elements.feedbackQuestionText.textContent = question.text;
   elements.feedbackLine.textContent = `你的答案：${formatAnswer(question, feedback.answer)} · ${data.texts.correctAnswer}：${formatAnswer(question, question.correctAnswer)}`;
   elements.feedbackProgress.textContent = `本题状态：${feedback.completed ? "已归档" : "继续巩固"} · 对/错 ${feedback.correctCount}/${feedback.wrongCount}`;

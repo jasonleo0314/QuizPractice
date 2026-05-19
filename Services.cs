@@ -7,6 +7,11 @@ namespace QuizPractice;
 
 public static class QuestionBankLoader
 {
+    private static readonly JsonSerializerOptions JsonOptions = new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+    };
+
     public static IReadOnlyList<Question> Load(string path)
     {
         if (!File.Exists(path))
@@ -14,54 +19,28 @@ public static class QuestionBankLoader
             throw new FileNotFoundException($"题库文件不存在：{path}", path);
         }
 
-        using var reader = new StreamReader(path, Encoding.UTF8, detectEncodingFromByteOrderMarks: true);
-        var header = reader.ReadLine();
-        if (string.IsNullOrWhiteSpace(header))
-        {
-            return [];
-        }
+        var json = File.ReadAllText(path, Encoding.UTF8);
+        var rawQuestions = JsonSerializer.Deserialize<List<RawQuestion>>(json, JsonOptions)
+            ?? throw new InvalidDataException("题库文件格式无效");
 
-        var questions = new List<Question>();
-        while (!reader.EndOfStream)
-        {
-            var line = reader.ReadLine();
-            if (string.IsNullOrWhiteSpace(line))
-            {
-                continue;
-            }
+        return rawQuestions
+            .Select(q => new Question(
+                q.Type,
+                q.Id.ToString(),
+                q.QuestionText,
+                q.Options,
+                AnswerNormalizer.Normalize(q.Answer, q.Type == "multiple_choice")))
+            .ToList();
+    }
 
-            var columns = line.Split('\t');
-            if (columns.Length < 6)
-            {
-                continue;
-            }
-
-            var optionKeys = new[] { "A", "B", "C", "D" };
-            var optionValues = columns
-                .Skip(3)
-                .Take(Math.Min(optionKeys.Length, columns.Length - 4))
-                .Select(option => option.Trim())
-                .ToList();
-
-            var options = optionKeys
-                .Take(optionValues.Count)
-                .Zip(optionValues, (key, value) => new KeyValuePair<string, string>(key, value))
-                .ToDictionary(option => option.Key, option => option.Value);
-
-            foreach (var emptyOption in options.Where(option => string.IsNullOrWhiteSpace(option.Value)).Select(option => option.Key).ToList())
-            {
-                options.Remove(emptyOption);
-            }
-
-            questions.Add(new Question(
-                columns[0].Trim(),
-                columns[1].Trim(),
-                columns[2].Trim(),
-                options,
-                AnswerNormalizer.Normalize(columns[^1], isMultiple: columns[0].Contains("多选", StringComparison.OrdinalIgnoreCase))));
-        }
-
-        return questions;
+    private sealed record RawQuestion
+    {
+        public int Id { get; init; }
+        public string Type { get; init; } = string.Empty;
+        [System.Text.Json.Serialization.JsonPropertyName("question")]
+        public string QuestionText { get; init; } = string.Empty;
+        public IReadOnlyDictionary<string, string> Options { get; init; } = new Dictionary<string, string>();
+        public string Answer { get; init; } = string.Empty;
     }
 }
 
